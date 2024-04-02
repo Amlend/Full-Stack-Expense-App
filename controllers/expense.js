@@ -1,14 +1,14 @@
 const express = require("express");
 const expenses = require("../models/expenses");
 const { JSON } = require("sequelize");
-
+const path = require("path");
 exports.getExpensesPage = (req, res, next) => {
   res
     .status(200)
-    .sendFile(path.join(__dirname, "public", "views", "index.html"));
+    .sendFile(path.join(__dirname, "..", "public", "views", "expense.html"));
 };
 
-exports.postExpenses = (req, res, next) => {
+exports.postExpeses = (req, res, next) => {
   const userExpense = {
     amount: req.body.amount,
     description: req.body.description,

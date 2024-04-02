@@ -6,6 +6,9 @@ const { error } = require("console");
 const { JSON } = require("sequelize");
 const expenses = require("./models/expenses");
 const expenseRoutes = require("./routes/expenses");
+const loginRoutes = require("./routes/login");
+const signUpRoutes = require("./routes/signup");
+const User = require("./models/signUpUser");
 
 const port = 3000;
 const app = express();
@@ -15,6 +18,8 @@ app.use(express.static(path.join(__dirname, "public", "css")));
 app.use(express.static(path.join(__dirname, "public", "js")));
 app.use(express.static(path.join(__dirname, "public", "views")));
 // routers
+app.use(loginRoutes);
+app.use(signUpRoutes);
 app.use(expenseRoutes);
 
 app.get("/expenses", async (req, res) => {
@@ -35,6 +40,7 @@ app.delete("/expenses/:id", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.sendStatus(500).json(err);
+    res.sendStatus(500).json(error);
   }
 });
 
