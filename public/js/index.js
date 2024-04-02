@@ -1,10 +1,42 @@
+async function addnewexpense() {
+  const amount = document.getElementById("amount").value;
+  const description = document.getElementById("discribe").value;
+  const category = document.getElementById("category").value;
+  const date = document.getElementById("date").value;
+  const time = document.getElementById("time").value;
+
+  const expense = {
+    amount: amount,
+    description: description,
+    category: category,
+    date: date,
+    time: time,
+  };
+
+  const token = localStorage.getItem("token");
+
+  await axios
+    .post("http://localhost:3000/register-expense", expense, {
+      headers: { Authorization: token },
+    })
+    .then((resonse) => {
+      console.log(resonse.data);
+    })
+    .catch((errr) => {
+      console.log(errr);
+    });
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   fetchData();
 });
 
 async function fetchData() {
+  const token = localStorage.getItem("token");
   await axios
-    .get("http://localhost:3000/expenses")
+    .get("http://localhost:3000/expenses", {
+      headers: { Authorization: token },
+    })
     .then((results) => {
       console.log(results);
       const expenses = results.data.allExpense;
@@ -25,16 +57,16 @@ function AddExpence(expense) {
 
   var li = document.createElement("li");
 
-  li.appendChild(document.createTextNode(`$${amount}`));
-  li.appendChild(document.createTextNode("  -  "));
+  li.appendChild(document.createTextNode(amount));
+  li.appendChild(document.createTextNode(" "));
   li.appendChild(document.createTextNode(description));
-  li.appendChild(document.createTextNode("  -  "));
+  li.appendChild(document.createTextNode(" "));
   li.appendChild(document.createTextNode(category));
-  li.appendChild(document.createTextNode("  -  "));
+  li.appendChild(document.createTextNode(" "));
   li.appendChild(document.createTextNode(date));
-  li.appendChild(document.createTextNode("  -  "));
+  li.appendChild(document.createTextNode(" "));
   li.appendChild(document.createTextNode(time));
-  li.appendChild(document.createTextNode("    "));
+  li.appendChild(document.createTextNode(" "));
 
   // Creatig delete button ***************************
 
@@ -79,7 +111,7 @@ function AddExpence(expense) {
     console.log(id);
 
     document.getElementById("amount").value = amount;
-    document.getElementById("describe").value = description;
+    document.getElementById("discribe").value = description;
     document.getElementById("category").value = category;
     document.getElementById("date").value = date;
     document.getElementById("time").value = time;
@@ -98,5 +130,5 @@ function AddExpence(expense) {
 function freeHolds() {
   setTimeout(() => {
     window.location.reload();
-  }, 100);
+  }, 300);
 }
