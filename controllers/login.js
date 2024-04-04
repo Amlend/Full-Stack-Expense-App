@@ -13,8 +13,6 @@ exports.postValidiateLogin = async (req, res, next) => {
     password: req.body.password,
   };
 
-  console.log(`controller`);
-
   function generateWebToken(id) {
     return jwt.sign({ userId: id }, "123456abcdef");
   }
@@ -30,11 +28,13 @@ exports.postValidiateLogin = async (req, res, next) => {
       .then((user) => {
         bcrypt.compare(userValidiate.password, user.password, (err, result) => {
           if (result === true) {
-            res.json({
-              success: true,
-              massage: "User loged successfully",
-              token: generateWebToken(user.id),
-            });
+            return res
+              .status(200)
+              .json({
+                success: true,
+                massage: "User loged successfully",
+                token: generateWebToken(user.id),
+              });
           } else {
             return res
               .status(500)

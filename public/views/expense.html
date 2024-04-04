@@ -70,11 +70,23 @@
         </form>
       </div>
       <br />
+      <div class="container" id="premium-container">
+        <button id="buybutton" class="btn btn-dark" onclick="buyPremiume()">
+          Buy Premium
+        </button>
+      </div>
+
+      <br />
       <div class="container">
         <ul id="items"></ul>
+      </div>
+      <div class="container">
+        <h3 id="lboardh"></h3>
+        <ul id="leaderboard"></ul>
       </div>
     </div>
 
     <script src="index.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   </body>
 </html>
