@@ -5,11 +5,13 @@ const sequelize = require("./util/database");
 const { error } = require("console");
 const { JSON, Association } = require("sequelize");
 const expenses = require("./models/expenses");
+
 const expenseRoutes = require("./routes/expenses");
 const loginRoutes = require("./routes/login");
 const signUpRoutes = require("./routes/signUp");
 const User = require("./models/signUpUser");
 const orders = require("./models/orders");
+const ForgetPassReq = require("./models/forgetPassReq.js");
 const premiumRouter = require("./routes/buyprimium");
 
 const port = 3000;
@@ -30,8 +32,11 @@ app.use(premiumRouter);
 // Associations
 User.hasMany(expenses);
 expenses.belongsTo(User);
+
 User.hasMany(orders);
 orders.belongsTo(User);
+User.hasMany(ForgetPassReq);
+ForgetPassReq.belongsTo(User);
 
 sequelize
   .sync()
