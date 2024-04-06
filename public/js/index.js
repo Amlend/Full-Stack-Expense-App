@@ -34,7 +34,7 @@ function premiumData(response) {
   reportFilebtn.classList = "btn btn-dark";
 
   premimuContainer.appendChild(userName);
-  // premimuContainer.appendChild(br);
+  premimuContainer.appendChild(br);
   premimuContainer.appendChild(premiumtext);
 
   premimuContainer.appendChild(space);
