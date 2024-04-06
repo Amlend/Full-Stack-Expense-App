@@ -1,4 +1,6 @@
 const express = require("express");
+require("dotenv").config();
+const fs = require("fs");
 const bodyParser = require("body-parser");
 const path = require("path");
 const sequelize = require("./util/database");
@@ -14,11 +16,20 @@ const User = require("./models/signUpUser");
 const orders = require("./models/orders");
 const ForgetPassReq = require("./models/forgetPassReq");
 const premiumRouter = require("./routes/buyprimium");
+const helmet = require("helmet");
+const morgan = require("morgan");
 
 const port = process.env.PORT || 3000;
 const app = express();
 
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, "access.log"),
+  { flags: "a" }
+);
+
 app.use(express.json());
+app.use(helmet());
+app.use(morgan("combined", { stream: accessLogStream }));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public", "css")));

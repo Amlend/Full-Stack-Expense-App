@@ -15,6 +15,7 @@ function premiumData(response) {
   const br3 = document.createElement("br");
   const br4 = document.createElement("br");
   const br5 = document.createElement("br");
+  const br6 = document.createElement("br");
   const space = document.createTextNode("All Expeses : ");
   const space2 = document.createTextNode("All Incomes : ");
 
@@ -24,31 +25,44 @@ function premiumData(response) {
   let leaderBoardText = document.createTextNode("leaderBoard");
   let downloadText = document.createTextNode("Download ");
   let downloadText2 = document.createTextNode("Download ");
+  let reportFilebtn = document.createElement("button");
+  let reportText = document.createTextNode(" Check Report");
 
   lbutton.classList = "btn btn-dark leaderBoard-btn";
   downloadBtn.classList = "btn btn-dark";
   IncomDownload.classList = "btn btn-dark";
+  reportFilebtn.classList = "btn btn-dark";
 
   premimuContainer.appendChild(userName);
-  premimuContainer.appendChild(br);
+  // premimuContainer.appendChild(br);
   premimuContainer.appendChild(premiumtext);
 
   premimuContainer.appendChild(space);
   premimuContainer.appendChild(lbutton);
 
   lbutton.appendChild(leaderBoardText);
-  premimuContainer.appendChild(br2);
-  premimuContainer.appendChild(br5);
+  // premimuContainer.appendChild(br2);
+  // premimuContainer.appendChild(br5);
 
   premimuContainer2.appendChild(space);
   premimuContainer2.appendChild(downloadBtn);
   downloadBtn.appendChild(downloadText);
-  premimuContainer2.appendChild(br3);
-  premimuContainer2.appendChild(br4);
+  // premimuContainer2.appendChild(br3);
+  // premimuContainer2.appendChild(br4);
 
   premimuContainer2.appendChild(space2);
   premimuContainer2.appendChild(IncomDownload);
   IncomDownload.appendChild(downloadText2);
+  //premimuContainer2.appendChild(br6);
+
+  premimuContainer2.appendChild(reportFilebtn);
+  reportFilebtn.appendChild(reportText);
+
+  reportFilebtn.addEventListener("click", reportFile);
+
+  async function reportFile() {
+    window.location.href = "/report-file-Page";
+  }
 
   downloadBtn.addEventListener("click", async function () {
     const token = localStorage.getItem("token");
@@ -90,6 +104,8 @@ function premiumData(response) {
       .then((result) => {
         let data = result.data.expensesl;
 
+        data.sort((a, b) => b.totalExpense - a.totalExpense);
+
         for (let i = 0; i < data.length; i++) {
           leaderBoardData(data[i]);
         }
@@ -115,6 +131,9 @@ function premiumData(response) {
     li.appendChild(td2);
 
     ul.appendChild(li);
+
+    const btn = document.getElementsByClassName(".leaderBoard-btn");
+    btn.disabled = "true";
   }
 }
 
@@ -177,6 +196,9 @@ async function fetchData() {
     .then((results) => {
       console.log(results);
       const expenses = results.data.allExpense;
+
+      expenses.sort((a, b) => b.id - a.id);
+
       const exp = 0;
       for (let i = 0; i <= expenses.length; i++) {
         AddExpence(expenses[i], exp);
@@ -191,6 +213,7 @@ async function fetchData() {
     .then((results) => {
       console.log(results);
       const incomes = results.data.allIncomes;
+      incomes.sort((a, b) => b.id - a.id);
       const inc = 1;
       for (let i = 0; i <= incomes.length; i++) {
         AddExpence(incomes[i], inc);
@@ -261,7 +284,6 @@ function AddExpence(expense, select) {
   var edit = document.createElement("button");
   edit.className = "btn btn-primary";
   edit.appendChild(document.createTextNode("Edit"));
-  edit.setAttribute("hidden", "hidden");
   li.appendChild(edit);
 
   // appending li element to ul *********************

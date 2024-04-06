@@ -1,5 +1,5 @@
 body {
-  background-color: rgb(104, 173, 175);
+  background-color: rgb(182, 207, 209);
 }
 
 h3 {
@@ -29,4 +29,16 @@ label {
 }
 .exp-div {
   max-height: 400px;
+}
+#premium-container2 {
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 670px) {
+  #premium-container2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 }

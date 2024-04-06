@@ -33,5 +33,11 @@ router.get(
   middlewareAuth.authentication,
   buyPremiumController.getDowndloadIncomes
 );
+router.get(
+  "/report-file",
+  middlewareAuth.authentication,
+  buyPremiumController.getReportFile
+);
+router.get("/report-file-Page", buyPremiumController.getReportFilePage);
 
 module.exports = router;

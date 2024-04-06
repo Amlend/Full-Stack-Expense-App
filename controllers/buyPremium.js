@@ -7,7 +7,7 @@ const e = require("express");
 const { Sequelize } = require("sequelize");
 const AWS = require("aws-sdk");
 const incomes = require("../models/incomes");
-require("dotenv").config();
+const path = require("path");
 
 exports.getIsPremiumUser = async (req, res) => {
   const userid = req.user.id;
@@ -167,4 +167,40 @@ exports.getDowndloadIncomes = async (req, res) => {
     .catch((err) => {
       console.log(err);
     });
+};
+
+exports.getReportFile = (req, res) => {
+  const userId = req.user.id;
+
+  Expenses.findAll({ where: { userId: userId } })
+    .then((result) => {
+      // console.log(result)
+
+      incomes
+        .findAll({ where: { userId: userId } })
+        .then((incomeResult) => {
+          // console.log(incomeResult[0]);
+          // console.log(result[0])
+          User.findOne({
+            where: { Id: userId },
+            attributes: ["totalExpense", "totalIncome"],
+          })
+            .then((userReult) => {
+              res.status(200).json({
+                Expenses: result,
+                Incomes: incomeResult,
+                total: userReult,
+              });
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.getReportFilePage = (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "../", "public", "views", "reportFile.html")
+  );
 };

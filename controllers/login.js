@@ -8,7 +8,6 @@ const sequelize = require("../util/database");
 const SibApiV3Sdk = require("sib-api-v3-sdk");
 const uuid = require("uuid");
 const { UUIDV4 } = require("sequelize");
-require("dotenv").config();
 exports.getLoginPage = (req, res, next) => {
   res.sendFile(path.join(__dirname, "../", "public", "views", "login.html"));
 };
