@@ -68,7 +68,7 @@ function premiumData(response) {
     const token = localStorage.getItem("token");
 
     await axios
-      .get("http://localhost:3000/download", {
+      .get("http://51.20.55.186:3000/download", {
         headers: { Authorization: token },
       })
       .then((result) => {
@@ -83,7 +83,7 @@ function premiumData(response) {
     const token = localStorage.getItem("token");
 
     await axios
-      .get("http://localhost:3000/downloadIncomes", {
+      .get("http://51.20.55.186:3000/downloadIncomes", {
         headers: { Authorization: token },
       })
       .then((result) => {
@@ -98,7 +98,7 @@ function premiumData(response) {
     const token = localStorage.getItem("token");
 
     await axios
-      .get("http://localhost:3000/premium-user-leaderboard", {
+      .get("http://51.20.55.186:3000/premium-user-leaderboard", {
         headers: { Authorization: token },
       })
       .then((result) => {
@@ -141,7 +141,7 @@ async function findPremium() {
   const token = localStorage.getItem("token");
 
   await axios
-    .get("http://localhost:3000/is-premium-user", {
+    .get("http://51.20.55.186:3000/is-premium-user", {
       headers: { Authorization: token },
     })
     .then((response) => {
@@ -174,7 +174,7 @@ async function addnewexpense() {
   const token = localStorage.getItem("token");
 
   await axios
-    .post("http://localhost:3000/register-expense", expense, {
+    .post("http://51.20.55.186:3000/register-expense", expense, {
       headers: { Authorization: token },
     })
     .then((resonse) => {
@@ -190,7 +190,7 @@ async function fetchData() {
 
   //  fetch expenses data---
   await axios
-    .get("http://localhost:3000/expenses", {
+    .get("http://51.20.55.186:3000/expenses", {
       headers: { Authorization: token },
     })
     .then((results) => {
@@ -209,7 +209,9 @@ async function fetchData() {
   //fetch incomes data ---
 
   await axios
-    .get("http://localhost:3000/incomes", { headers: { Authorization: token } })
+    .get("http://51.20.55.186:3000/incomes", {
+      headers: { Authorization: token },
+    })
     .then((results) => {
       console.log(results);
       const incomes = results.data.allIncomes;
@@ -222,7 +224,9 @@ async function fetchData() {
     .catch((err) => console.log("FetchData income function error", err));
 
   await axios
-    .get("http://localhost:3000/balance", { headers: { Authorization: token } })
+    .get("http://51.20.55.186:3000/balance", {
+      headers: { Authorization: token },
+    })
     .then((results) => {
       console.log(results);
       const balance = results.data.balance;
@@ -296,7 +300,7 @@ function AddExpence(expense, select) {
   async function decreas() {
     await axios
       .post(
-        `http://localhost:3000/decreas-exspense`,
+        `http://51.20.55.186:3000/decreas-exspense`,
         { amount, select },
         { headers: { Authorization: token } }
       )
@@ -323,7 +327,7 @@ function AddExpence(expense, select) {
     console.log(router);
 
     await axios
-      .delete(`http://localhost:3000/${router}/${id}`)
+      .delete(`http://51.20.55.186:3000/${router}/${id}`)
       .then((result) => {
         console.log("deleted..");
         tr.removeChild(li);
@@ -355,7 +359,7 @@ function AddExpence(expense, select) {
     }
 
     try {
-      await axios.delete(`http://localhost:3000/${router}/${id}`);
+      await axios.delete(`http://51.20.55.186:3000/${router}/${id}`);
       tr.removeChild(li);
       console.log("editing data..");
     } catch (error) {
@@ -376,7 +380,7 @@ function freeHolds() {
 async function buyPremiume(e) {
   const token = localStorage.getItem("token");
 
-  const response = await axios.get("http://localhost:3000/buy-premium", {
+  const response = await axios.get("http://51.20.55.186:3000/buy-premium", {
     headers: { Authorization: token },
   });
 
@@ -385,7 +389,7 @@ async function buyPremiume(e) {
     order_id: response.data.order.id,
     handler: async function (resonse) {
       await axios.post(
-        "http://localhost:3000/premium-success",
+        "http://51.20.55.186:3000/premium-success",
         {
           order_id: options.order_id,
           payment_id: resonse.razorpay_payment_id,

@@ -16,7 +16,6 @@ const User = require("./models/signUpUser");
 const orders = require("./models/orders");
 const ForgetPassReq = require("./models/forgetPassReq");
 const premiumRouter = require("./routes/buyprimium");
-const helmet = require("helmet");
 const morgan = require("morgan");
 
 const port = process.env.PORT || 3000;
@@ -28,7 +27,6 @@ const accessLogStream = fs.createWriteStream(
 );
 
 app.use(express.json());
-app.use(helmet());
 app.use(morgan("combined", { stream: accessLogStream }));
 
 app.use(bodyParser.urlencoded({ extended: false }));

@@ -23,7 +23,7 @@ exports.postSignUpUser = (req, res, next) => {
         password: hash,
       })
         .then(() => {
-          res.send("You Sign Successfully.. Go back login");
+          res.redirect("/");
           console.log(" New User Sign Up now..");
         })
         .catch((err) => {
