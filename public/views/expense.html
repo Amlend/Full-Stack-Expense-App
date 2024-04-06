@@ -31,7 +31,12 @@
           method="post"
           onsubmit="addnewexpense(),freeHolds()"
         >
-          <label for="amount">Expence Amount :</label>
+          <label for="select"> Select: Income Or Expence</label>
+          <select name="money" id="select" class="form-control">
+            <option value="1">Income</option>
+            <option value="0">Expence</option>
+          </select>
+          <label for="amount"> Amount :</label>
           <input
             type="number"
             name="amount"
@@ -77,13 +82,52 @@
       </div>
 
       <br />
-      <div class="container">
-        <ul id="items"></ul>
+      <div class="b">
+        <h4>Balance :</h4>
+        <h4 id="balance"></h4>
       </div>
-      <div class="container">
-        <h3 id="lboardh"></h3>
-        <ul id="leaderboard"></ul>
+      <div class="container exp-div overflow-auto">
+        <div class="head">
+          <h3>All Expenses</h3>
+        </div>
+
+        <table id="example" class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Amount</th>
+              <th scope="col">Description</th>
+              <th scope="col">Category</th>
+              <th scope="col">Date</th>
+            </tr>
+          </thead>
+
+          <tbody id="items"></tbody>
+        </table>
       </div>
+      <div class="container exp-div overflow-auto">
+        <h3>All Incomes</h3>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Amount</th>
+              <th scope="col">Description</th>
+              <th scope="col">Category</th>
+              <th scope="col">Date</th>
+            </tr>
+          </thead>
+
+          <tbody id="income-items"></tbody>
+        </table>
+      </div>
+
+      <div class="container">
+        <h3 id="lboardh">Leaderboard</h3>
+        <table class="table table-striped">
+          <tbody id="leaderboard"></tbody>
+        </table>
+      </div>
+
+      <div class="container" id="premium-container2"></div>
     </div>
 
     <script src="index.js"></script>

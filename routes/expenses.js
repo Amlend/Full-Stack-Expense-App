@@ -12,17 +12,28 @@ router.post(
   uerAuthentication.authentication,
   expenseController.postInTotalExpense
 );
-//router.post('/register-expense',uerAuthentication.authentication, expenseController.postInTotalExpense);
 router.get(
   "/expenses",
   uerAuthentication.authentication,
   expenseController.getExpenses
 );
+router.get(
+  "/incomes",
+  uerAuthentication.authentication,
+  expenseController.getIncomes
+);
+
 router.delete("/expenses/:id", expenseController.deleteExpense);
+router.delete("/incomes/:id", expenseController.deleteIncome);
 router.post(
   "/decreas-exspense",
   uerAuthentication.authentication,
   expenseController.getDescreasExpense
+);
+router.get(
+  "/balance",
+  uerAuthentication.authentication,
+  expenseController.getBalance
 );
 
 module.exports = router;

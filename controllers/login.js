@@ -3,7 +3,7 @@ const User = require("../models/signUpUser");
 const path = require("path");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const ForgetPassReq = require("../models/forgetPassReq.js");
+const ForgetPassReq = require("../models/forgetPassReq");
 const sequelize = require("../util/database");
 const SibApiV3Sdk = require("sib-api-v3-sdk");
 const uuid = require("uuid");
@@ -32,7 +32,6 @@ exports.postForgetPassword = async (req, res) => {
           ForgetPassReq.findOne({ where: { userId: user.id, isActive: true } })
             .then((request) => {
               let defaultClient = SibApiV3Sdk.ApiClient.instance;
-
               let apiKey = defaultClient.authentications["api-key"];
               apiKey.apiKey = process.env.SIB_API_KEY;
 
@@ -230,7 +229,7 @@ exports.postValidiateLogin = async (req, res, next) => {
       .then((user) => {
         bcrypt.compare(userValidiate.password, user.password, (err, result) => {
           if (result === true) {
-            return res.status(200).json({
+            res.status(200).json({
               success: true,
               massage: "User loged successfully",
               token: generateWebToken(user.id),

@@ -5,16 +5,17 @@ const sequelize = require("./util/database");
 const { error } = require("console");
 const { JSON, Association } = require("sequelize");
 const expenses = require("./models/expenses");
+const Incomes = require("./models/incomes");
 
 const expenseRoutes = require("./routes/expenses");
 const loginRoutes = require("./routes/login");
 const signUpRoutes = require("./routes/signUp");
 const User = require("./models/signUpUser");
 const orders = require("./models/orders");
-const ForgetPassReq = require("./models/forgetPassReq.js");
+const ForgetPassReq = require("./models/forgetPassReq");
 const premiumRouter = require("./routes/buyprimium");
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 const app = express();
 
 app.use(express.json());
@@ -32,6 +33,8 @@ app.use(premiumRouter);
 // Associations
 User.hasMany(expenses);
 expenses.belongsTo(User);
+User.hasMany(Incomes);
+Incomes.belongsTo(User);
 
 User.hasMany(orders);
 orders.belongsTo(User);

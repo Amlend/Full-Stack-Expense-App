@@ -23,5 +23,15 @@ router.get(
   middlewareAuth.authentication,
   buyPremiumController.getLeaderboard
 );
+router.get(
+  "/download",
+  middlewareAuth.authentication,
+  buyPremiumController.getDowndload
+);
+router.get(
+  "/downloadIncomes",
+  middlewareAuth.authentication,
+  buyPremiumController.getDowndloadIncomes
+);
 
 module.exports = router;
