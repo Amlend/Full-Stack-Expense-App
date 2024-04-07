@@ -1,7 +1,7 @@
 async function getReport() {
   const token = localStorage.getItem("token");
   await axios
-    .get("http://51.20.55.186:3000/report-file", {
+    .get("http://51.20.55.186/report-file", {
       headers: { Authorization: token },
     })
     .then((response) => {

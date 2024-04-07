@@ -49,7 +49,7 @@ exports.postForgetPassword = async (req, res) => {
 
               sendSmtpEmail.headers = { "Some-Custom-Name": "unique-id-1234" };
               sendSmtpEmail.params = {
-                parameter: `http://51.20.55.186:3000/reset-pasword-page/${request.id}`,
+                parameter: `http://51.20.55.186/reset-pasword-page/${request.id}`,
                 subject: "Reset Expense Tracker Password",
               };
 
