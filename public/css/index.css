@@ -35,6 +35,10 @@ label {
   justify-content: space-between;
 }
 
+.pagination-container {
+  text-align: center;
+}
+
 @media (max-width: 670px) {
   #premium-container2 {
     display: flex;

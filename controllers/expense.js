@@ -6,6 +6,8 @@ const User = require("../models/signUpUser");
 const jwt = require("jsonwebtoken");
 const sequelize = require("../util/database");
 const Incomes = require("../models/incomes");
+const { log } = require("console");
+const incomes = require("../models/incomes");
 exports.getExpensesPage = (req, res, next) => {
   res
     .status(200)
@@ -86,34 +88,97 @@ exports.postExpeses = async (req, res, next) => {
 
 exports.getExpenses = async (req, res, next) => {
   const t = await sequelize.transaction();
+  const page = parseInt(req.query.page) || 1; // Default to page 1
+  const limit = parseInt(req.query.limit) || 2; // Default items per page
+  console.log("Hello page");
+  console.log(req.query.page);
+  console.log(req.query.limit);
+
   try {
+    const offset = (page - 1) * limit; // Calculate offset for pagination
+
     const expense = await expenses.findAll({
+      where: { userId: req.user.id },
+      offset,
+      limit,
+      transaction: t,
+    });
+
+    const totalExpensesCount = await expenses.count({
       where: { userId: req.user.id },
       transaction: t,
     });
-    res.status(200).json({ allExpense: expense });
+
+    res
+      .status(200)
+      .json({ allExpense: expense, totalCount: totalExpensesCount });
 
     await t.commit();
   } catch (error) {
     await t.rollback();
-    console.log("get expense is failing", JSON.stringify(error));
+    // console.log("get expense is failing", JSON.stringify(error));
     res.status(500).json({ error: error });
   }
 };
+
+// exports.getExpenses = async (req, res, next) => {
+//   const t = await sequelize.transaction();
+//   const page = parseInt(req.query.page) || 1; // Default to page 1
+//   const limit = parseInt(req.query.limit) || 2; // Default items per page
+
+//   try {
+//     const offset = (page - 1) * limit; // Calculate offset for pagination
+
+//     const expense = await expenses.findAll({
+//       where: { userId: req.user.id },
+//       offset,
+//       limit,
+//       transaction: t,
+//     });
+
+//     const totalExpensesCount = await expenses.count({
+//       where: { userId: req.user.id },
+//       transaction: t,
+//     });
+
+//     res
+//       .status(200)
+//       .json({ allExpense: expense, totalCount: totalExpensesCount });
+
+//     await t.commit();
+//   } catch (error) {
+//     await t.rollback();
+//     // console.log("get expense is failing", JSON.stringify(error));
+//     res.status(500).json({ error: error });
+//   }
+// };
 exports.getIncomes = async (req, res, next) => {
   const t = await sequelize.transaction();
+  const page = parseInt(req.query.page) || 1; // Default to page 1
+  const limit = parseInt(req.query.limit) || 2; // Default items per page
+
   try {
-    const incomes = await Incomes.findAll({
+    const offset = (page - 1) * limit; // Calculate offset for pagination
+
+    const income = await incomes.findAll({
+      where: { userId: req.user.id },
+      offset,
+      limit,
+      transaction: t,
+    });
+
+    const totalIncomesCount = await incomes.count({
       where: { userId: req.user.id },
       transaction: t,
     });
-    res.status(200).json({ allIncomes: incomes });
+
+    res.status(200).json({ allIncomes: income, totalCount: totalIncomesCount });
 
     await t.commit();
   } catch (error) {
     await t.rollback();
-    console.log("get Incomes is failing");
-    throw new Error(error);
+    // console.log("get expense is failing", JSON.stringify(error));
+    res.status(500).json({ error: error });
   }
 };
 

@@ -116,12 +116,14 @@ function premiumData(response) {
   });
 
   function leaderBoardData(data) {
-    console.log(data);
     const { name, totalExpense } = data;
     const ul = document.getElementById("leaderboard");
     const li = document.createElement("tr");
     const td1 = document.createElement("td");
     const td2 = document.createElement("td");
+    while (ul.firstChild) {
+      ul.removeChild(ul.lastChild);
+    }
 
     td1.appendChild(document.createTextNode(name));
     //li.appendChild(document.createTextNode(' '));
@@ -188,54 +190,150 @@ async function addnewexpense() {
 async function fetchData() {
   const token = localStorage.getItem("token");
 
-  //  fetch expenses data---
-  await axios
-    .get("http://51.20.55.186/expenses", {
-      headers: { Authorization: token },
-    })
-    .then((results) => {
-      console.log(results);
-      const expenses = results.data.allExpense;
+  const expDropdown = document.getElementById("exp-items-per-page");
+  const incDropdown = document.getElementById("inc-items-per-page");
+  expDropdown.value = parseInt(localStorage.getItem("itemPerPageExp"));
+  incDropdown.value = parseInt(localStorage.getItem("itemPerPageInc"));
 
-      expenses.sort((a, b) => b.id - a.id);
+  try {
+    // Initial fetch
+    fetchExpensesAndPopulate(1, localStorage.getItem("itemPerPageExp") || 2); // Default items per page
+    fetchIncomesAndPopulate(1, localStorage.getItem("itemPerPageInc") || 2); // Default items per page
 
-      const exp = 0;
-      for (let i = 0; i <= expenses.length; i++) {
-        AddExpence(expenses[i], exp);
-      }
-    })
-    .catch((err) => console.log("FetchData expense function error", err));
+    expDropdown.addEventListener("change", () => {
+      const newItemsPerPage = parseInt(expDropdown.value);
+      localStorage.setItem("itemPerPageExp", expDropdown.value);
+      fetchExpensesAndPopulate(1, newItemsPerPage); // Start from page 1
+    });
+    incDropdown.addEventListener("change", () => {
+      const newItemsPerPage = parseInt(incDropdown.value);
+      localStorage.setItem("itemPerPageInc", incDropdown.value);
+      fetchIncomesAndPopulate(1, newItemsPerPage); // Start from page 1
+    });
 
-  //fetch incomes data ---
+    // Update UI with balance (assuming results is the response object)
+    const balance = await axios
+      .get("http://51.20.55.186/balance", {
+        headers: { Authorization: token },
+      })
+      .then((results) => {
+        const balanceValue = results.data.balance;
+        const balanceElement = document.getElementById("balance");
+        balanceElement.textContent = balanceValue; // Update balance text content
+      })
+      .catch((err) => console.log("FetchData Balance function error", err));
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+}
 
-  await axios
-    .get("http://51.20.55.186/incomes", {
-      headers: { Authorization: token },
-    })
-    .then((results) => {
-      console.log(results);
-      const incomes = results.data.allIncomes;
-      incomes.sort((a, b) => b.id - a.id);
-      const inc = 1;
-      for (let i = 0; i <= incomes.length; i++) {
-        AddExpence(incomes[i], inc);
-      }
-    })
-    .catch((err) => console.log("FetchData income function error", err));
+async function fetchExpenses(page, itemsPerPage, token) {
+  const url = `http://51.20.55.186/expenses?page=${page}&limit=${itemsPerPage}`;
+  const results = await axios.get(url, {
+    headers: { Authorization: token },
+  });
+  return results;
+}
 
-  await axios
-    .get("http://51.20.55.186/balance", {
-      headers: { Authorization: token },
-    })
-    .then((results) => {
-      console.log(results);
-      const balance = results.data.balance;
+async function fetchIncomes(page, itemsPerPage, token) {
+  const url = `http://51.20.55.186/incomes?page=${page}&limit=${itemsPerPage}`;
+  const results = await axios.get(url, {
+    headers: { Authorization: token },
+  });
+  return results;
+}
 
-      const tBalance = document.getElementById("balance");
-      const balanceNode = document.createTextNode(balance);
-      tBalance.appendChild(balanceNode);
-    })
-    .catch((err) => console.log("FetchData Balance function error", err));
+function updateExpenseTable(data) {
+  let elem1 = document.getElementById("items");
+  while (elem1.firstChild) {
+    elem1.removeChild(elem1.firstChild);
+  }
+  const exp = 0;
+  for (let i = 0; i < data.length; i++) {
+    console.log(data[i]);
+    AddExpence(data[i], exp);
+  }
+}
+
+function updateIncomeTable(data) {
+  let elem1 = document.getElementById("income-items");
+  while (elem1.firstChild) {
+    elem1.removeChild(elem1.firstChild);
+  }
+  const exp = 1;
+  for (let i = 0; i < data.length; i++) {
+    console.log(data[i]);
+    AddExpence(data[i], exp);
+  }
+}
+
+function generatePagination(
+  containerId,
+  totalItems,
+  itemsPerPage,
+  onPageChange
+) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = ""; // Clear previous pagination
+
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  // Create pagination buttons
+  for (let i = 1; i <= totalPages; i++) {
+    const button = document.createElement("button");
+    button.innerText = i;
+    button.addEventListener("click", () => onPageChange(i, itemsPerPage));
+    container.appendChild(button);
+  }
+}
+
+async function fetchExpensesAndPopulate(page, itemsPerPage) {
+  const token = localStorage.getItem("token");
+  const results = await fetchExpenses(page, itemsPerPage, token);
+  console.log(itemsPerPage);
+  console.log("Dataaaaaaaaa");
+  console.log(results.data);
+
+  // scenario where there are less items than requested
+  const dataToDisplay =
+    results.data.allExpense.length < itemsPerPage
+      ? results.data.allExpense
+      : results.data.allExpense.slice(0, itemsPerPage); // Slice if needed
+
+  updateExpenseTable(dataToDisplay);
+  generatePagination(
+    "exp-pagination",
+    results.data.totalCount,
+    itemsPerPage,
+    handleExpensePageChange
+  );
+}
+
+async function fetchIncomesAndPopulate(page, itemsPerPage) {
+  const token = localStorage.getItem("token");
+  const results = await fetchIncomes(page, itemsPerPage, token);
+
+  // scenario where there are less items than requested
+  const dataToDisplay =
+    results.data.allIncomes.length < itemsPerPage
+      ? results.data.allIncomes
+      : results.data.allIncomes.slice(0, itemsPerPage); // Slice if needed
+
+  updateIncomeTable(dataToDisplay);
+  generatePagination(
+    "inc-pagination",
+    results.data.totalCount,
+    itemsPerPage,
+    handleIncomePageChange
+  );
+}
+
+function handleExpensePageChange(pageNumber, itemsPerPage) {
+  fetchExpensesAndPopulate(pageNumber, itemsPerPage);
+}
+
+function handleIncomePageChange(pageNumber, itemsPerPage) {
+  fetchIncomesAndPopulate(pageNumber, itemsPerPage);
 }
 
 function AddExpence(expense, select) {

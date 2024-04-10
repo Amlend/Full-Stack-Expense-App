@@ -90,6 +90,11 @@
         <div class="head">
           <h3>All Expenses</h3>
         </div>
+        <select id="exp-items-per-page" class="custom-select">
+          <option value="2">2 per page</option>
+          <option value="4">4 per page</option>
+          <option value="6">6 per page</option>
+        </select>
 
         <table id="example" class="table table-striped">
           <thead>
@@ -104,8 +109,14 @@
           <tbody id="items"></tbody>
         </table>
       </div>
+      <div class="pagination-container" id="exp-pagination"></div>
       <div class="container exp-div overflow-auto">
         <h3>All Incomes</h3>
+        <select id="inc-items-per-page" class="custom-select">
+          <option value="2">2 per page</option>
+          <option value="4">4 per page</option>
+          <option value="6">6 per page</option>
+        </select>
         <table class="table table-striped">
           <thead>
             <tr>
@@ -119,6 +130,7 @@
           <tbody id="income-items"></tbody>
         </table>
       </div>
+      <div class="pagination-container" id="inc-pagination"></div>
 
       <div class="container">
         <h3 id="lboardh">Leaderboard</h3>
